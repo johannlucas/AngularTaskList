@@ -1,0 +1,39 @@
+<div class="header">
+  <p>
+    Tasklist
+  </p>
+</div>
+<div class="content">
+  <div class="tasks">
+    <div class="tasks-list" *ngFor="let task of tasks">
+      <label class="tasks-list-item">
+        <input type="checkbox" name="task_{{task.id}}" value="1" class="tasks-list-cb" [checked]="task.done_at != null" >
+        <span class="tasks-list-mark"></span>
+        <span class="tasks-list-desc">{{task.title}}</span>
+        <p-button class="button-item" (click)='delTask()' styleClass="ui-button-danger" label="Delete Task"></p-button>
+        <p-button class="button-item" (click)='details(task)' label="Details"></p-button>
+      </label>
+    </div>
+  </div>
+  <p-button class="button-add" (click)='newTask()' styleClass="ui-button-success" label="New Task"></p-button>
+
+  <p-toast position="center" key="details" [modal]="true" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+      <div class="details">
+        <div *ngIf="editMode">
+            <input type="text" pInputText [(ngModel)]="currentTask.title"/>
+            <textarea pInputTextarea [(ngModel)]="currentTask.detail"></textarea>
+        </div>
+        <div *ngIf="!editMode">
+          <h3>{{currentTask.title}}</h3>
+          <p>{{currentTask.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+          <div class="ui-g-6">
+            <button type="button" (click)='cancelMessage()' pButton label="Ok" class="ui-button-success button-details"></button>
+            <button type="button" (click)='editTask()' pButton label="Edit" class="button-details"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-toast>
