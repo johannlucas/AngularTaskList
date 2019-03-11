@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Task } from './../models/task'
 import { MessageService } from 'primeng/api';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-tasklist',
@@ -13,40 +14,60 @@ export class TasklistComponent implements OnInit {
   currentTask: Task;
   editMode: boolean;
 
-  constructor(private _messageService: MessageService) {}
+  constructor(private _messageService: MessageService,
+    private _taskService: TaskService) { }
 
   ngOnInit() {
-    this.tasks = [];
+    this.loadTasks();
+  }
 
-    let task1 = new Task();
-    task1.id = 1;
-    task1.title = "Clean up my room.";
-    task1.detail = "Mom can't hold anymore that mess on my room.";
-    task1.done_at = new Date();
-    
-    let task2 = new Task();
-    task2.id = 2;
-    task2.title = "Study for python test.";
-    task2.detail = "Study module 1 and 2, and listen to the alura class.";
-
-    let task3 = new Task();
-    task3.id = 3;
-    task3.title = "Wash the dishes.";
-    task3.detail = "The dinner last night was insane.";
-
-    this.tasks.push(task1);
-    this.tasks.push(task2);
-    this.tasks.push(task3);
-
-    console.log(this.tasks);
+  loadTasks() {
+    //Get list of tasks
+    this._taskService.getTasks().subscribe((data: Task[]) => {
+      this.tasks = data;
+    });
   }
 
   newTask() {
+    this.editMode = true;
+    this.currentTask = new Task();
 
+    this._messageService.clear();
+    this._messageService.add({ key: 'details', sticky: true, severity: 'success', closable: false });
   }
 
-  delTask() {
+  saveTask() {
+    if (this.editMode) {
+      if (this.currentTask.id > 0)
+        this._taskService.updateTask(this.currentTask).subscribe((data: any) => {
+          this.loadTasks();
+          this.showSuccess();
+        });
+      else
+        this._taskService.insertTask(this.currentTask).subscribe((data: any) => {
+          this.loadTasks();
+          this.showSuccess();
+        });
+    }
 
+    this._messageService.clear('details');
+    this.editMode = false;
+  }
+
+  updateDoneAt(task: Task, event) {
+
+    task.done_At = event.target.checked ? new Date() : null;
+    this._taskService.updateTask(task).subscribe((data: any) => {
+      this.loadTasks();
+      this.showSuccess();
+    });
+  }
+
+  delTask(task: Task) {
+    this._taskService.deleteTask(task).subscribe((data: any) => {
+      this.loadTasks();
+      this.showSuccess();
+    });
   }
 
   editTask() {
@@ -60,8 +81,7 @@ export class TasklistComponent implements OnInit {
     this._messageService.add({ key: 'details', sticky: true, severity: 'info', closable: false });
   }
 
-  cancelMessage() {
-    this._messageService.clear('details');
-    this.editMode = false;
+  showSuccess() {
+    this._messageService.add({ severity: 'success', summary: 'Success!', life: 2000 });
   }
 }

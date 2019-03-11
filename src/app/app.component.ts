@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +9,12 @@ import { Router } from '@angular/router';
 })
 
 export class AppComponent implements OnInit {
-  title = 'Tasklist';
-  constructor(private router: Router) { }
+  title = 'TaskList';
+  constructor(private _router: Router,
+  private _titleSerivce: Title) { }
 
   ngOnInit(): void {
-    this.router.navigateByUrl('list');
+    this._titleSerivce.setTitle(this.title);
+    this._router.navigateByUrl('list');
   }
 }
