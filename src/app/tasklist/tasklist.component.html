@@ -11,6 +11,7 @@
       <span class="tasks-list-desc">{{task.title}}</span>
       <p-button class="button-item" (click)='delTask(task)' styleClass="ui-button-danger" label="Delete Task"></p-button>
       <p-button class="button-item" (click)='details(task)' label="Details"></p-button>
+      <span *ngIf="task.done_At != null" class="doneat" style="float:right">{{task.done_At | date: 'dd/MM/yyyy'}}</span>
     </label>
   </div>
 </div>
