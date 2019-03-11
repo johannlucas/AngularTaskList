@@ -37,7 +37,7 @@ export class TasklistComponent implements OnInit {
   }
 
   saveTask() {
-    if (this.editMode) {
+    if (this.editMode && this.validateTask(this.currentTask)) {
       if (this.currentTask.id > 0)
         this._taskService.updateTask(this.currentTask).subscribe((data: any) => {
           this.loadTasks();
@@ -55,6 +55,8 @@ export class TasklistComponent implements OnInit {
   }
 
   updateDoneAt(task: Task, event) {
+    if (!this.validateTask(task))
+      return;
 
     task.done_At = event.target.checked ? new Date() : null;
     this._taskService.updateTask(task).subscribe((data: any) => {
@@ -83,5 +85,22 @@ export class TasklistComponent implements OnInit {
 
   showSuccess() {
     this._messageService.add({ severity: 'success', summary: 'Success!', life: 2000 });
+  }
+
+  showError(message: string) {
+    this._messageService.add({ severity: 'error', summary: 'Validation Failed!', detail: message });
+  }
+
+  validateTask(task: Task) {
+    if (task.title.length > 50) {
+      this.showError('Title was too long, only 50 caracters is accepted.');
+      return false;
+    }
+    if (task.detail.length > 250) {
+      this.showError('Detail was too long, only 250 caracters is accepted.');
+      return false;
+    }
+
+    return true;
   }
 }
