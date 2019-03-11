@@ -3,7 +3,7 @@ import { TasklistComponent } from './tasklist/tasklist.component';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: 'list', component: TasklistComponent }
+  { path: '', component: TasklistComponent }
 ];
 
 @NgModule({

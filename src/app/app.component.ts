@@ -15,6 +15,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this._titleSerivce.setTitle(this.title);
-    this._router.navigateByUrl('list');
   }
 }

@@ -1,0 +1,4 @@
+{
+    "appService.deploySubpath": "",
+    "appService.defaultWebAppToDeploy": "/subscriptions/dfe4b644-bc8b-4995-a966-56a45eeebfec/resourceGroups/Recursos-SB/providers/Microsoft.Web/sites/AngularTaskList"
+}
